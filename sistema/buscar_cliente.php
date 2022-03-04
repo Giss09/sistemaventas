@@ -1,8 +1,5 @@
 <?php 
 session_start();
-if($_SESSION['rol'] != 1){
-	header("location: ./");
-}
 		include	"../conexion.php";
 ?>
 <!DOCTYPE html>
@@ -10,7 +7,7 @@ if($_SESSION['rol'] != 1){
 <head>
 	<meta charset="UTF-8">
 	<?php include "include/scripts.php"; ?>
-	<title>Lista de Usuarios</title>
+	<title>Lista de Clientes</title>
 </head>
 <body>
 	<?php include "include/header.php"; ?>
@@ -18,44 +15,35 @@ if($_SESSION['rol'] != 1){
 		<?php 
 			$busqueda = strtolower($_REQUEST['busqueda']);
 			if(empty($busqueda)){
-				header("location: lista_usuarios.php");
+				header("location: lista_cliente.php");
 				mysqli_close($conection);
 			}
 		?>
-		<h1>Lista de Usuarios</h1>
-			<a href="registro_usuario.php" class="btn_new">Crear Usuario</a>
-			<form action="buscar_usuario.php" method="GET" class="form_search">
+		<h1>Lista de Clientes</h1>
+			<a href="registro_cliente.php" class="btn_new">Crear Cliente</a>
+			<form action="buscar_cliente.php" method="GET" class="form_search">
 					<input type="text" name="busqueda" id="busqueda" placeholder="Buscar" value="<?php echo $busqueda; ?>">
 					<input type="submit" value="Buscar" class="btn_search">
 			</form>
 			<table>
 				<tr>
 					<th>ID</th>
+					<th>Cédula</th>
 					<th>Nombre</th>
-					<th>Correo</th>
-					<th>Usuario</th>
-					<th>Rol</th>
+					<th>Teléfono</th>
+					<th>Dirección</th>
 					<th>Acciones</th>
 				</tr>
 					<?php 
 					//paginador
-					$rol = "";
-					if($busqueda == 'Administrador'){
-						$rol = "OR rol LIKE '%1%'";
-					}else if($busqueda == 'Diseñador@'){
-						$rol = "OR rol LIKE '%2%'";
-					}else if($busqueda == 'Vendedor'){
-						$rol = "OR rol LIKE '%3%'";
-					}else if($busqueda == 'Supervisor'){
-						$rol = "OR rol LIKE '%4%'";
-					}
-							$sql_register = mysqli_query($conection, "SELECT COUNT(*) AS total_registro FROM usuario 
+							$sql_register = mysqli_query($conection, "SELECT COUNT(*) AS total_registro FROM cliente 
 												WHERE 
-											(	idusuario LIKE '%$busqueda%' OR
+											(	idcliente LIKE '%$busqueda%' OR
+												cedula LIKE '%$busqueda%' OR
 												nombre LIKE '%$busqueda%' OR
-												correo LIKE '%$busqueda%' OR
-												usuario LIKE '%$busqueda%' 
-												$rol)
+												telefono LIKE '%$busqueda%' OR
+												direccion LIKE '%$busqueda%' 
+												)
 												AND	estatus = 1");
 							$result_register = mysqli_fetch_array($sql_register);
 							$total_registro = $result_register['total_registro'];
