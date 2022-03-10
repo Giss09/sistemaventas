@@ -5,35 +5,36 @@ if($_SESSION['rol'] != 1){
 }
 	include "../conexion.php";
 		if(!empty($_POST)){
-				if(empty($_POST['idproveedor'])){
-					header("location: lista_proveedor.php");
+				if(empty($_POST['idcliente'])){
+					header("location: lista_cliente.php");
 					mysqli_close($conection);
 				}
-				$idproveedor = $_POST['idproveedor'];
+				$idcliente = $_POST['idcliente'];
 				//$query_delete = mysqli_query($conection,"DELETE FROM cliente WHERE idusuario = $idusuario");
-				$query_delete = mysqli_query($conection, "UPDATE proveedor SET estatus = 0 WHERE codproveedor = $idproveedor");
+				$query_delete = mysqli_query($conection, "UPDATE cliente SET estatus = 0 WHERE idcliente = $idcliente");
 				mysqli_close($conection);
 				if($query_delete){
-					header("location: lista_proveedor.php");
+					header("location: lista_cliente.php");
 				}else {
-					echo "Error al eliminar el proveedor";
+					echo "Error al eliminar el cliente";
 				}
 			}
 		
 			if(empty($_REQUEST['id'])){
-				header("location: lista_proveedor.php");
+				header("location: lista_cliente.php");
 				mysqli_close($conection);
 			}else{
-				$idproveedor = $_REQUEST['id'];
-				$query = mysqli_query($conection,"SELECT *	FROM proveedor WHERE codproveedor = $idproveedor");
+				$idcliente = $_REQUEST['id'];
+				$query = mysqli_query($conection,"SELECT *	FROM cliente WHERE idcliente = $idcliente");
 				mysqli_close($conection);
 				$result = mysqli_num_rows($query);
 				if ($result > 0) {
 					while($data = mysqli_fetch_array($query)){
-						$proveedor = $data['proveedor'];
+						$cedula = $data['cedula'];
+						$nombre = $data['nombre'];
 					}
 				}else{
-					header("location: lista_proveedor.php");
+					header("location: lista_cliente.php");
 				}
 			}
 ?>
@@ -42,7 +43,7 @@ if($_SESSION['rol'] != 1){
 <head>
 	<meta charset="UTF-8">
 	<?php include "include/scripts.php"; ?>
-	<title>Eliminar Proveedor</title>
+	<title>Eliminar Cliente</title>
 </head>
 <body>
 	<?php include "include/header.php"; ?>
@@ -51,11 +52,12 @@ if($_SESSION['rol'] != 1){
 			<i class="fa fa-user-times fa-7x" color= "#88B0A4" aria-hidden="true"></i>
 			<br>
 			<br>	
-			<h2>¿Esta seguro de eliminar al Proveedor</h2>
+			<h2>¿Esta seguro de eliminar al cliente</h2>
 			<br>
-			<p>Nombre del Proveedor: <span><?php echo $proveedor; ?></span></p>
+			<p>Cédula: <span><?php echo $cedula; ?></span></p>
+			<p>Nombre del Cliente: <span><?php echo $nombre; ?></span></p>
 			<form method="POST" action="">
-				<input type="hidden" name="idproveedor" value="<?php echo $idproveedor; ?>">
+				<input type="hidden" name="idcliente" value="<?php echo $idcliente; ?>">
 				<button type="submit" class="btn_cancel"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</button>
 				<button type="submit" class="btn_ok"><i class="fa fa-trash" aria-hidden="true"></i> Aceptar</button>
 			</form>
