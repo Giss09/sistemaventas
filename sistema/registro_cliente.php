@@ -42,7 +42,7 @@ session_start();
 	<?php include "include/header.php"; ?>
 	<section id="container">
 		<div class="form_register">
-			<h3>Registro de Clientes</h3>
+			<h1><i class="fa fa-user-plus fa-lg" aria-hidden="true"></i> Registro de Clientes</h1>
 			<hr>
 			<div class="alert"><?php echo isset($alert) ? $alert : ''; ?></div>
 			<form action="" method="POST">
@@ -54,8 +54,7 @@ session_start();
 				<input type="number" name="telefono" id="telefono" placeholder="Teléfono">
 				<label for="direccion">Dirección</label>
 				<input type="text" name="direccion" id="direccion" placeholder="Dirección">
-							
-				<input type="submit" value="Guardar Cliente" class="btn_save">
+				<button type="submit" class="btn_save"><i class="far fa-save"></i> Crear Cliente</button>
 			</form>
 		</div>
 	</section>
