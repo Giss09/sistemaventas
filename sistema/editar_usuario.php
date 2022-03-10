@@ -1,11 +1,15 @@
 <?php
+session_start();
+if($_SESSION['rol'] != 1){
+	header("location: ./");
+}
 	include "../conexion.php";
 		if(!empty($_POST)){
 			$alert = "";
 			if(empty($_POST['nombre']) || empty($_POST['correo']) || empty($_POST['usuario']) || empty($_POST['rol'])){
 				$alert = '<p class="msg_error">Todos los campos son requeridos</p>';
 			}else{
-				$idUsuario = $_POST['idUsuario'];
+				$idUsuario = $_POST['id'];
 				$nombre = $_POST['nombre'];
 				$email = $_POST['correo'];
 				$user = $_POST['usuario'];
@@ -15,6 +19,7 @@
 													WHERE (usuario = '$user' AND idusuario != $idUsuario)
 													OR (correo = '$email' AND idusuario != $idUsuario)");
 				$result = mysqli_fetch_array($query);
+				//$result = count($result);
 				if($result > 0){
 					$alert = '<p class="msg_error">El correo o el usuario ya existe.</p>';
 				}else{
@@ -37,11 +42,13 @@
 		}
 
 		//MOSTRAR DATOS
-		if(empty($_GET['id'])){
+		if(empty($_REQUEST['id'])){
 			header('location: lista_usuarios.php');
+			mysqli_close($conection);
 		}
-		$iduser = $_GET['id'];
-		$sql = mysqli_query($conection,"SELECT u.idusuario, u.nombre, u.correo, u.usuario, (u.rol) AS idrol, (r.rol) AS rol FROM usuario u INNER JOIN rol r ON u.rol = r.idrol WHERE idusuario = $iduser");
+		$iduser = $_REQUEST['id'];
+		$sql = mysqli_query($conection,"SELECT u.idusuario, u.nombre, u.correo, u.usuario, (u.rol) AS idrol, (r.rol) AS rol FROM usuario u INNER JOIN rol r ON u.rol = r.idrol WHERE idusuario = $iduser and estatus = 1");
+		mysqli_close($conection);
 		$result_sql = mysqli_num_rows($sql);
 		if($result_sql == 0){
 			header ('location: lista_usuarios.php');
@@ -75,11 +82,11 @@
 	<?php include "include/header.php"; ?>
 	<section id="container">
 		<div class="form_register">
-			<h3>Actuaizar Usuario</h3>
+			<h1><i class="far fa-edit"></i> Actualizar Usuario</h1>
 			<hr>
 			<div class="alert"><?php echo isset($alert) ? $alert : ''; ?></div>
 			<form action="" method="POST">
-				<input type="hidden" name="idUsuario" value="<?php echo $iduser; ?>">
+				<input type="hidden" name="id" value="<?php echo $iduser; ?>">
 				<label for="nombre">Nombre</label>
 				<input type="text" name="nombre" id="nombre" placeholder="Nombre Completo" value="<?php echo $nombre;?>">
 				<label for="correo">Correo Electronico</label>
@@ -90,7 +97,9 @@
 				<input type="password" name="clave" id="clave" placeholder="Clave de Acceso">
 				<label for="rol">Rol</label>
 				<?php 
+					include "../conexion.php";
 					$query_rol = mysqli_query($conection,"SELECT * FROM rol");
+					mysqli_close($conection);
 					$result_rol = mysqli_num_rows($query_rol);
 				?>
 				<select name = "rol" id = "rol" class="notItemOne">
@@ -105,7 +114,7 @@
 						}
 					?>
 				</select>
-				<input type="submit" value="Actualizar Usuario" class="btn_save">
+				<button type="submit" class="btn_save"><i class="far fa-edit"></i> Actualizar Usuario</button>
 			</form>
 		</div>
 	</section>
