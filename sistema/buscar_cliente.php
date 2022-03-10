@@ -19,11 +19,11 @@ session_start();
 				mysqli_close($conection);
 			}
 		?>
-		<h1>Lista de Clientes</h1>
-			<a href="registro_cliente.php" class="btn_new">Crear Cliente</a>
+		<h1><i class="fa fa-users fa-lg" aria-hidden="true"></i> Lista de Clientes</h1>
+			<a href="registro_cliente.php" class="btn_new"><i class="fa fa-user-plus" aria-hidden="true"></i> Crear Cliente</a>
 			<form action="buscar_cliente.php" method="GET" class="form_search">
 					<input type="text" name="busqueda" id="busqueda" placeholder="Buscar" value="<?php echo $busqueda; ?>">
-					<input type="submit" value="Buscar" class="btn_search">
+					<button type="submit" class="btn_search"><i class="fa fa-search" aria-hidden="true"></i></button>
 			</form>
 			<table>
 				<tr>
@@ -55,32 +55,31 @@ session_start();
 							}
 								$desde = ($pagina - 1) * $por_pagina;
 								$total_paginas = ceil($total_registro / $por_pagina); //CEIL SIRVE PARA REDONDEAR
-									$query = mysqli_query($conection, "SELECT u.idusuario, u.nombre, u.correo, u.usuario, r.rol FROM usuario u INNER JOIN rol r ON u.rol = r.idrol WHERE
-										( u.idusuario LIKE '%$busqueda%' OR
-										  u.nombre LIKE '%$busqueda%' OR
-										  u.correo LIKE '%$busqueda%' OR
-										  u.usuario LIKE '%$busqueda%' OR
-										  r.rol LIKE '$busqueda')
- 										AND	 estatus = 1 ORDER BY u.idusuario ASC LIMIT $desde, $por_pagina");
+									$query = mysqli_query($conection, "SELECT * FROM cliente WHERE
+										( idcliente LIKE '%$busqueda%' OR
+										  cedula LIKE '%$busqueda%' OR
+										  nombre LIKE '%$busqueda%' OR
+										  telefono LIKE '%$busqueda%' OR
+										 direccion LIKE '%$busqueda%' )
+ 										AND	 estatus = 1 ORDER BY idcliente ASC LIMIT $desde, $por_pagina");
 									mysqli_close($conection);
 											$result = mysqli_num_rows($query);
 												if($result	> 0){
 													while (	$data = mysqli_fetch_array($query)) {
 								?>
 								<tr>
-									<td><?php echo $data["idusuario"] ?></td>
+									<td><?php echo $data["idcliente"] ?></td>
+									<td><?php echo $data["cedula"] ?></td>
 									<td><?php echo $data["nombre"] ?></td>
-									<td><?php echo $data["correo"] ?></td>
-									<td><?php echo $data["usuario"] ?></td>
-									<td><?php echo $data["rol"] ?></td>
+									<td><?php echo $data["telefono"] ?></td>									
+									<td><?php echo $data["direccion"] ?></td>
 									<td>
-										<a class = "link_edit" href="editar_usuario.php?id=<?php echo $data["idusuario"] ?>">Editar</a>
+										<a class = "link_edit" href="editar_cliente.php?id=<?php echo $data["idcliente"] ?>"><i class="far fa-edit"></i> Editar</a>
 										<?php
-											if($data["idusuario"] != 1 ){
-											
+											if($_SESSION['rol'] == 1){
 										?>
 										|
-										<a class = "link_delete" href="eliminar_usuario.php?id=<?php echo $data["idusuario"] ?>">Eliminar</a>
+										<a class = "link_delete" href="eliminar_cliente.php?id=<?php echo $data["idcliente"] ?>"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</a>
 										<?php
 											}
 										?>
@@ -99,8 +98,8 @@ session_start();
 								<?php 
 									if($pagina != 1){
 								?>	
-								<li><a href="?pagina=<?php echo 1; ?>&busqueda=<?php echo $busqueda; ?>">|<</a></li>
-								<li><a href="?pagina=<?php echo $pagina - 1; ?>&busqueda=<?php echo $busqueda; ?>"><<</a></li>
+								<li><a href="?pagina=<?php echo 1; ?>&busqueda=<?php echo $busqueda; ?>"><i class="fa fa-step-backward" aria-hidden="true"></i></a></li>
+								<li><a href="?pagina=<?php echo $pagina - 1; ?>&busqueda=<?php echo $busqueda; ?>"><i class="fa fa-backward" aria-hidden="true"></i></a></li>
 								<?php
 									}
 									for ($i=1; $i <= $total_paginas; $i++) { 
@@ -112,8 +111,8 @@ session_start();
 									}
 									if($pagina != $total_paginas){
 								?>
-								<li><a href="?pagina=<?php echo $pagina + 1; ?>&busqueda=<?php echo $busqueda; ?>">>></a></li>
-								<li><a href="?pagina=<?php echo $total_paginas; ?>&busqueda=<?php echo $busqueda; ?>">>|</a></li>
+								<li><a href="?pagina=<?php echo $pagina + 1; ?>&busqueda=<?php echo $busqueda; ?>"><i class="fa fa-forward" aria-hidden="true"></i></a></li>
+								<li><a href="?pagina=<?php echo $total_paginas; ?>&busqueda=<?php echo $busqueda; ?>"><i class="fa fa-step-forward" aria-hidden="true"></i></a></a></li>
 								<?php
 									}
 
