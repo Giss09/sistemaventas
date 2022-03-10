@@ -43,7 +43,7 @@ session_start();
 			mysqli_close($conection);
 		}
 		$idcliente = $_REQUEST['id'];
-		$sql = mysqli_query($conection,"SELECT * FROM cliente WHERE idcliente = $idcliente");
+		$sql = mysqli_query($conection,"SELECT * FROM cliente WHERE idcliente = $idcliente and estatus = 1");
 		mysqli_close($conection);
 		$result_sql = mysqli_num_rows($sql);
 		if($result_sql == 0){
@@ -69,7 +69,7 @@ session_start();
 	<?php include "include/header.php"; ?>
 	<section id="container">
 		<div class="form_register">
-			<h3>Actuaizar Cliente</h3>
+			<h1><i class="far fa-edit"></i> Actuaizar Cliente</h1>
 			<hr>
 			<div class="alert"><?php echo isset($alert) ? $alert : ''; ?></div>
 			<form action="" method="POST">
@@ -82,8 +82,7 @@ session_start();
 				<input type="number" name="telefono" id="telefono" placeholder="Teléfono"value="<?php echo $telefono; ?>">
 				<label for="direccion">Dirección</label>
 				<input type="text" name="direccion" id="direccion" placeholder="Dirección"value="<?php echo $direccion; ?>">
-							
-				<input type="submit" value="Actualizar Cliente" class="btn_save">
+				<button type="submit" class="btn_save"><i class="far fa-edit"></i> Actualizar Cliente</button>
 			</form>
 		</div>
 	</section>
