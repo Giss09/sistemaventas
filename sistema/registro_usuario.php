@@ -1,4 +1,8 @@
 <?php
+session_start();
+if($_SESSION['rol'] != 1){
+	header("location: ./");
+}
 	include "../conexion.php";
 		if(!empty($_POST)){
 			$alert = "";
@@ -25,6 +29,7 @@
 				}
 			}
 		}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +42,7 @@
 	<?php include "include/header.php"; ?>
 	<section id="container">
 		<div class="form_register">
-			<h3>Registro de Usuario</h3>
+			<h1><i class="fa fa-user-plus fa-lg" aria-hidden="true"></i> Registro de Usuario</h1>
 			<hr>
 			<div class="alert"><?php echo isset($alert) ? $alert : ''; ?></div>
 			<form action="" method="POST">
@@ -65,7 +70,7 @@
 						}
 					?>
 				</select>				
-				<input type="submit" value="Crear Usuario" class="btn_save">
+				<button type="submit" class="btn_save"><i class="far fa-save"></i> Crear Usuario</button>
 			</form>
 		</div>
 	</section>
