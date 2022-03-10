@@ -1,13 +1,19 @@
 <?php  
+session_start();
+if($_SESSION['rol'] != 1){
+	header("location: ./");
+}
 	include "../conexion.php";
 		if(!empty($_POST)){
 			if($_POST['idusuario'] == 1){
 				header("location: lista_usuarios.php");
+				mysqli_close($conection);
 				exit;
 			}
 				$idusuario = $_POST['idusuario'];
 				//$query_delete = mysqli_query($conection,"DELETE FROM usuario WHERE idusuario = $idusuario");
 				$query_delete = mysqli_query($conection, "UPDATE usuario SET estatus = 0 WHERE idusuario = $idusuario");
+				mysqli_close($conection);
 				if($query_delete){
 					header("location: lista_usuarios.php");
 				}else {
@@ -16,6 +22,7 @@
 		}
 			if(empty($_REQUEST['id']) || $_REQUEST['id'] == 1){
 				header("location: lista_usuarios.php");
+				mysqli_close($conection);
 			}else{
 				$idusuario = $_REQUEST['id'];
 				$query = mysqli_query($conection,"SELECT u.nombre, u.usuario, r.rol
@@ -24,6 +31,7 @@
 														rol r 
 														ON u.rol = r.idrol
 														WHERE u.idusuario = $idusuario");
+				mysqli_close($conection);
 				$result = mysqli_num_rows($query);
 				if ($result > 0) {
 					while($data = mysqli_fetch_array($query)){
@@ -47,6 +55,9 @@
 	<?php include "include/header.php"; ?>
 	<section id="container">
 		<div class="data_delete"> 
+			<i class="fa fa-user-times fa-7x" color= "#88B0A4" aria-hidden="true"></i>
+			<br>
+			<br>	
 			<h2>¿Esta seguro de eliminar el siguiente registro?</h2>
 			<br>
 			<p>Nombre: <span><?php echo $nombre; ?></span></p>
@@ -54,8 +65,9 @@
 			<p>Tipo de Usuario: <span><?php echo $rol; ?></span></p>
 			<form method="POST" action="">
 				<input type="hidden" name="idusuario" value="<?php echo $idusuario; ?>">
-				<a href="lista_usuarios.php" class="btn_cancel">Cancelar</a>
-				<input type="submit" value="Aceptar" class="btn_ok">
+				<button type="submit" class="btn_cancel"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</button>
+				<button type="submit" class="btn_ok"><i class="fa fa-trash" aria-hidden="true"></i> Aceptar</button>
+				
 			</form>
 		</div>
 	</section>
