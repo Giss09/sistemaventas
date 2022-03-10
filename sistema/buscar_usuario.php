@@ -22,11 +22,11 @@ if($_SESSION['rol'] != 1){
 				mysqli_close($conection);
 			}
 		?>
-		<h1>Lista de Usuarios</h1>
-			<a href="registro_usuario.php" class="btn_new">Crear Usuario</a>
+		<h1><i class="fa fa-users fa-lg" aria-hidden="true"></i> Lista de Usuarios</h1>
+			<a href="registro_usuario.php" class="btn_new"><i class="fa fa-user-plus" aria-hidden="true"></i> Crear Usuario</a>
 			<form action="buscar_usuario.php" method="GET" class="form_search">
 					<input type="text" name="busqueda" id="busqueda" placeholder="Buscar" value="<?php echo $busqueda; ?>">
-					<input type="submit" value="Buscar" class="btn_search">
+					<button type="submit" class="btn_search"><i class="fa fa-search" aria-hidden="true"></i></button>
 			</form>
 			<table>
 				<tr>
@@ -86,13 +86,13 @@ if($_SESSION['rol'] != 1){
 									<td><?php echo $data["usuario"] ?></td>
 									<td><?php echo $data["rol"] ?></td>
 									<td>
-										<a class = "link_edit" href="editar_usuario.php?id=<?php echo $data["idusuario"] ?>">Editar</a>
+										<a class = "link_edit" href="editar_usuario.php?id=<?php echo $data["idusuario"] ?>"><i class="far fa-edit"></i> Editar</a>
 										<?php
 											if($data["idusuario"] != 1 ){
 											
 										?>
 										|
-										<a class = "link_delete" href="eliminar_usuario.php?id=<?php echo $data["idusuario"] ?>">Eliminar</a>
+										<a class = "link_delete" href="eliminar_usuario.php?id=<?php echo $data["idusuario"] ?>"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</a>
 										<?php
 											}
 										?>
@@ -111,8 +111,8 @@ if($_SESSION['rol'] != 1){
 								<?php 
 									if($pagina != 1){
 								?>	
-								<li><a href="?pagina=<?php echo 1; ?>&busqueda=<?php echo $busqueda; ?>">|<</a></li>
-								<li><a href="?pagina=<?php echo $pagina - 1; ?>&busqueda=<?php echo $busqueda; ?>"><<</a></li>
+								<li><a href="?pagina=<?php echo 1; ?>&busqueda=<?php echo $busqueda; ?>"><i class="fa fa-step-backward" aria-hidden="true"></i></a></li>
+								<li><a href="?pagina=<?php echo $pagina - 1; ?>&busqueda=<?php echo $busqueda; ?>"><i class="fa fa-backward" aria-hidden="true"></i></a></li>
 								<?php
 									}
 									for ($i=1; $i <= $total_paginas; $i++) { 
@@ -124,8 +124,8 @@ if($_SESSION['rol'] != 1){
 									}
 									if($pagina != $total_paginas){
 								?>
-								<li><a href="?pagina=<?php echo $pagina + 1; ?>&busqueda=<?php echo $busqueda; ?>">>></a></li>
-								<li><a href="?pagina=<?php echo $total_paginas; ?>&busqueda=<?php echo $busqueda; ?>">>|</a></li>
+								<li><a href="?pagina=<?php echo $pagina + 1; ?>&busqueda=<?php echo $busqueda; ?>"><i class="fa fa-forward" aria-hidden="true"></i></a></li>
+								<li><a href="?pagina=<?php echo $total_paginas; ?>&busqueda=<?php echo $busqueda; ?>"><i class="fa fa-step-forward" aria-hidden="true"></i></a></a></li>
 								<?php
 									}
 
