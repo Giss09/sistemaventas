@@ -12,11 +12,11 @@ session_start();
 <body>
 	<?php include "include/header.php"; ?>
 	<section id="container">
-		<h1>Lista de Clientes</h1>
-			<a href="registro_cliente.php" class="btn_new">Crear Cliente</a>
+		<h1><i class="fa fa-users fa-lg" aria-hidden="true"></i> Lista de Clientes</h1>
+			<a href="registro_cliente.php" class="btn_new"><i class="fa fa-user-plus" aria-hidden="true"></i> Crear Cliente</a>
 			<form action="buscar_cliente.php" method="get" class="form_search">
 					<input type="text" name="busqueda" id="busqueda" placeholder="Buscar">
-					<input type="submit" value="Buscar" class="btn_search">
+					<button type="submit" class="btn_search"><i class="fa fa-search" aria-hidden="true"></i></button>
 			</form>
 				<table>
 					<tr>
@@ -54,13 +54,13 @@ session_start();
 									<td><?php echo $data["telefono"] ?></td>
 									<td><?php echo $data["direccion"] ?></td>
 									<td>
-										<a class = "link_edit" href="editar_cliente.php?id=<?php echo $data["idcliente"] ?>">Editar</a>
+										<a class = "link_edit" href="editar_cliente.php?id=<?php echo $data["idcliente"] ?>"><i class="far fa-edit"></i> Editar</a>
 										<?php
 											if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 4){
 											
 										?>
 										|
-										<a class = "link_delete" href="eliminar_cliente.php?id=<?php echo $data["idcliente"] ?>">Eliminar</a>
+										<a class = "link_delete" href="eliminar_cliente.php?id=<?php echo $data["idcliente"] ?>"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</a>
 										<?php
 											}
 										?>
@@ -76,8 +76,8 @@ session_start();
 								<?php 
 									if($pagina != 1){
 								?>	
-								<li><a href="?pagina=<?php echo 1; ?>">|<</a></li>
-								<li><a href="?pagina=<?php echo $pagina - 1; ?>"><<</a></li>
+								<li><a href="?pagina=<?php echo 1; ?>"><i class="fa fa-step-backward" aria-hidden="true"></i></a></li>
+								<li><a href="?pagina=<?php echo $pagina - 1; ?>"><i class="fa fa-backward" aria-hidden="true"></i></a></li>
 								<?php
 									}
 									for ($i=1; $i <= $total_paginas; $i++) { 
@@ -89,8 +89,8 @@ session_start();
 									}
 									if($pagina != $total_paginas){
 								?>
-								<li><a href="?pagina=<?php echo $pagina + 1; ?>">>></a></li>
-								<li><a href="?pagina=<?php echo $total_paginas; ?>">>|</a></li>
+								<li><a href="?pagina=<?php echo $pagina + 1; ?>"><i class="fa fa-forward" aria-hidden="true"></i></a></li>
+								<li><a href="?pagina=<?php echo $total_paginas; ?>"><i class="fa fa-step-forward" aria-hidden="true"></i></a></li>
 								<?php
 									}
 								?>
