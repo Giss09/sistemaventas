@@ -1,6 +1,6 @@
 <?php  
 session_start();
-if($_SESSION['rol'] != 1 and $_SESSION['rol'] != 4){
+if($_SESSION['rol'] != 1){
 	header("location: ./");
 }
 	include "../conexion.php";
@@ -49,14 +49,17 @@ if($_SESSION['rol'] != 1 and $_SESSION['rol'] != 4){
 	<?php include "include/header.php"; ?>
 	<section id="container">
 		<div class="data_delete"> 
+			<i class="fa fa-user-times fa-7x" color= "#88B0A4" aria-hidden="true"></i>
+			<br>
+			<br>	
 			<h2>¿Esta seguro de eliminar al cliente</h2>
 			<br>
 			<p>Cédula: <span><?php echo $cedula; ?></span></p>
 			<p>Nombre del Cliente: <span><?php echo $nombre; ?></span></p>
 			<form method="POST" action="">
 				<input type="hidden" name="idcliente" value="<?php echo $idcliente; ?>">
-				<a href="lista_cliente.php" class="btn_cancel">Cancelar</a>
-				<input type="submit" value="Aceptar" class="btn_ok">
+				<button type="submit" class="btn_cancel"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</button>
+				<button type="submit" class="btn_ok"><i class="fa fa-trash" aria-hidden="true"></i> Aceptar</button>
 			</form>
 		</div>
 	</section>
