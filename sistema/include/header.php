@@ -5,7 +5,7 @@
 ?>
 <header>
 		<div class="header">
-			<p style="text-align- left" ><i class="fa fa-paw" aria-hidden="true"></i> Sistema de Facturación Love & Pets</p>
+			<p style="text-align" ><i class="fa fa-paw" aria-hidden="true"></i> Sistema de Facturación Love & Pets</p>
 			<div class="optionsBar">
 				<p>Quito, <?php echo fechaC();?></p>
 				<span>|</span>
