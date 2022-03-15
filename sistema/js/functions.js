@@ -40,18 +40,16 @@ $(document).ready(function(){
         if($("#foto_actual") $$ $("#foto_remove")){
             $("#foto_remove").val('img_producto.jpg');
         }
-        if($("#foto_anterior") $$ $("#foto_reciente")){
-            $("#foto_reciente").val('img_materiaprima.jpg');
-        }
     });
 
 
 
-//--------------------- AGREGAR PRODUCTOS ---------------------
+//--------------------- AGREGAR PRODUCTOS CON MODAL ---------------------
 
     $('.del_product').click(function(e){
-        e.preventDefault();
-        var producto = $(this).attr('product');
+        e.preventDefault(); //PREVIENE LAS ACCIONES
+        var producto = $(this).attr('product'); //NOS PERMITE ACCEDER A LOS DIFERENTES ATRIBUTOS DE ESE ELEMENTO
+        //alert(producto);
         var action = 'infoProducto';
         $.ajax({
             url: 'ajax.php',
@@ -112,6 +110,8 @@ function sendDataProduct(){
         }
     });    
 }
+
+
 
 function closeModal(){
     $('#alertAddProduct').html();

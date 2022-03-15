@@ -493,7 +493,7 @@ table td{
 	position: fixed;
 	width: 100%;
 	height: 100vh;
-	background: rgba(0, 0, 0, 0.85);
+	background: rgba(0, 0, 0, 0.75);
 	display: none;
 }
 
@@ -526,10 +526,6 @@ table td{
 	text-align: center;
 }
 
-#form_add_materia{
-	width: 420px;
-	text-align: center;
-}
 
 /*============ Ventas ============*/
 .datos_cliente, .datos_venta, .title_page{

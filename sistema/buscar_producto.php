@@ -1,8 +1,5 @@
 <?php 
 session_start();
-if($_SESSION['rol'] != 1){
-	header("location: ./");
-}
 		include	"../conexion.php";
 ?>
 <!DOCTYPE html>
@@ -10,7 +7,7 @@ if($_SESSION['rol'] != 1){
 <head>
 	<meta charset="UTF-8">
 	<?php include "include/scripts.php"; ?>
-	<title>Lista de Proveedor</title>
+	<title>Lista de Productos</title>
 </head>
 <body>
 	<?php include "include/header.php"; ?>
@@ -18,33 +15,35 @@ if($_SESSION['rol'] != 1){
 		<?php 
 			$busqueda = strtolower($_REQUEST['busqueda']);
 			if(empty($busqueda)){
-				header("location: lista_proveedor.php");
+				header("location: lista_producto.php");
 				mysqli_close($conection);
 			}
 		?>
-		<h1><i class="fa fa-address-book" aria-hidden="true"></i> Lista de Proveedores</h1>
-			<a href="registro_proveedor.php" class="btn_new"><i class="fa fa-user-plus" aria-hidden="true"></i> Crear Proveedor</a>
-			<form action="buscar_proveedor.php" method="GET" class="form_search">
-					<input type="text" name="busqueda" id="busqueda" placeholder="Buscar" value="<?php echo $busqueda; ?>">
+		<h1><i class="fa fa-spinner" aria-hidden="true"></i> Lista de Productos</h1>
+			<a href="registro_producto.php" class="btn_new"><i class="fa fa-plus" aria-hidden="true"></i> Crear Producto</a>
+			<form action="buscar_producto.php" method="get" class="form_search">
+					<input type="text" name="busqueda" id="busqueda" placeholder="Buscar">
 					<button type="submit" class="btn_search"><i class="fa fa-search" aria-hidden="true"></i></button>
+
 			</form>
 			<table>
 				<tr>
 					<th>ID</th>
-					<th>Empresa</th>
-					<th>Nombre del Proveedor</th>
-					<th>Teléfono</th>
-					<th>Dirección</th>
+					<th>Categoria</th>
+					<th>Descripción</th>
+					<th>Precio</th>
+					<th>Talla</th>
+					<th>Existencia</th>
+					<th>Foto</th>
 					<th>Acciones</th>
 				</tr>
 					<?php 
 					//paginador
-							$sql_register = mysqli_query($conection, "SELECT COUNT(*) AS total_registro FROM proveedor 
+							$sql_register = mysqli_query($conection, "SELECT COUNT(*) AS total_registro FROM producto 
 												WHERE 
-											(	codproveedor LIKE '%$busqueda%' OR
-												proveedor LIKE '%$busqueda%' OR
-												contacto LIKE '%$busqueda%' OR
-												telefono LIKE '%$busqueda%' 
+											(	codproducto LIKE '%$busqueda%' OR
+												producto LIKE '%$busqueda%' OR
+												categoria LIKE '%$busqueda%' 
 												)
 												AND	estatus = 1");
 							$result_register = mysqli_fetch_array($sql_register);
@@ -57,27 +56,40 @@ if($_SESSION['rol'] != 1){
 							}
 								$desde = ($pagina - 1) * $por_pagina;
 								$total_paginas = ceil($total_registro / $por_pagina); //CEIL SIRVE PARA REDONDEAR
-									$query = mysqli_query($conection, "SELECT * FROM proveedor WHERE
-										( codproveedor LIKE '%$busqueda%' OR
-										  proveedor LIKE '%$busqueda%' OR
-										  contacto LIKE '%$busqueda%' OR
-										  telefono LIKE '%$busqueda%' )
- 										AND	 estatus = 1 ORDER BY codproveedor ASC LIMIT $desde, $por_pagina");
+									$query = mysqli_query($conection, "SELECT * FROM producto WHERE
+										( codproducto LIKE '%$busqueda%' OR
+										  producto LIKE '%$busqueda%' OR
+										  categoria LIKE '%$busqueda%'   )
+ 										AND	 estatus = 1 ORDER BY codproducto ASC LIMIT $desde, $por_pagina");
 									mysqli_close($conection);
 											$result = mysqli_num_rows($query);
 												if($result	> 0){
 													while (	$data = mysqli_fetch_array($query)) {
+														if($data['foto'] != 'img_producto.jpg'){
+															$foto = 'img/imagenesProductos/' .$data['foto'];
+														}else{
+															$foto = 'img/' .$data ['foto'];
+														}
 								?>
 								<tr>
-									<td><?php echo $data["codproveedor"] ?></td>
-									<td><?php echo $data["proveedor"] ?></td>
-									<td><?php echo $data["contacto"] ?></td>
-									<td><?php echo $data["telefono"] ?></td>									
-									<td><?php echo $data["direccion"] ?></td>
+									<td><?php echo $data["codproducto"] ?></td>
+									<td><?php echo $data["categoria"] ?></td>
+									<td><?php echo $data["producto"] ?></td>
+									<td><?php echo $data["precio"] ?></td>
+									<td><?php echo $data["talla"] ?></td>
+									<td><?php echo $data["existencia"] ?></td>
+									<td class="img_producto"><img src="<?php echo $foto; ?>" alt="<?php echo $data["producto"]; ?>"></td>
 									<td>
-										<a class = "link_edit" href="editar_proveedor.php?id=<?php echo $data["codproveedor"] ?>"><i class="far fa-edit"></i> Editar</a>
+										<?php
+											if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 4){
+											
+										?>
+										<a class = "link_edit" href="editar_producto.php?id=<?php echo $data["codproducto"] ?>"><i class="far fa-edit"></i> Editar</a>
 										|
-										<a class = "link_delete" href="eliminar_proveedor.php?id=<?php echo $data["codproveedor"] ?>"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</a>
+										<a class = "link_delete" href="eliminar_producto.php?id=<?php echo $data["codproducto"] ?>"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</a>
+										<?php
+											}
+										?>
 									</td>
 								</tr>		
 								<?php
