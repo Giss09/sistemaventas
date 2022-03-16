@@ -11,7 +11,13 @@ session_start();
 <body>
 	<?php include "include/header.php"; ?>
 	<section id="container">
-		<h2>Sistema Love & Pets</h2>
+		<h1><i class="fa fa-paw" aria-hidden="true"></i> Bienvenid@ al Sistema Love & Pets</h1>
+		<br>
+		<br>
+		<div>	
+		<span class="user"><?php echo $_SESSION['nombre'];?></span>
+		</div>
+
 	</section>
 	<?php include "include/footer.php"; ?>
 </body>
