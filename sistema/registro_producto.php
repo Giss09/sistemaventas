@@ -1,8 +1,6 @@
 <?php
 session_start();
-if($_SESSION['rol'] != 1){
-	header("location: ./");
-}
+
 	include "../conexion.php";
 		if(!empty($_POST)){
 			//print_r($_FILES);
@@ -31,13 +29,15 @@ if($_SESSION['rol'] != 1){
 					$src = $destino.$imgProducto;
 				}
 				/*almacenar datos en la tabla materia prima*/
-				$query_insert = mysqli_query($conection,"INSERT INTO producto(categoria, producto, precio, talla, existencia, usuario_id, foto) VALUES('$categoria','$producto','$precio','$talla','$existencia','$usuario_id', '$imgProducto')");
+				$query_insert = mysqli_query($conection,"INSERT INTO producto
+				(categoria, producto, precio, talla, existencia, usuario_id, foto) 
+				VALUES('$categoria','$producto','$precio','$talla','$existencia','$usuario_id','$imgProducto')");
 					if($query_insert){
 						if($nombre_foto != ''){
-							move_uploaded_file($url_temp, $src); /*almacenando la ruta temporal del archivo y lo va a mover a la nueva ruta */
+							move_uploaded_file($url_temp,$src); /*almacenando la ruta temporal del archivo y lo va a mover a la nueva ruta */
 						}
 						$alert = '<p class="msg_save">El producto se creo existosamente.</p>';	
-						header("location: lista_producto.php");
+						//header("location: lista_producto.php");
 					}else{
 						$alert = '<p class="msg_error">El producto no fue creado.</p>';
 				}
