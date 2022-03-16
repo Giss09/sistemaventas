@@ -616,3 +616,14 @@ table td{
 	margin: 0 3px;
 	color: #FFF;
 }
+
+/*--Footer--*/
+footer{
+  background: #CCC;
+}
+
+footer .copyright{
+  text-align: center;
+  padding: 15px 0;
+  color: #fff;
+}

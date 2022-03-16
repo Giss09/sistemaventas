@@ -8,7 +8,7 @@ if($_SESSION['rol'] != 1){
 			//print_r($_FILES);
 			//exit;
 			$alert = "";
-			if(empty($_POST['categoria']) || empty($_POST['producto']) || empty($_POST['precio']) || $_POST['precio'] <=0 || empty($_POST['talla']) || empty($_POST['foto_actual']) ||  empty($_POST['foto_remove']) ){
+			if(empty($_POST['categoria']) || empty($_POST['producto']) || empty($_POST['precio']) || $_POST['precio'] <=0 || empty($_POST['talla']) || empty($_POST['existencia']) ||  $_POST['existencia'] <=0 || empty($_POST['foto_actual']) ||  empty($_POST['foto_remove']) ){
 				$alert = '<p class="msg_error">Todos los campos son requeridos</p>';
 			}else{
 				$codproducto = $_POST['id'];
@@ -16,6 +16,7 @@ if($_SESSION['rol'] != 1){
 				$producto = $_POST['producto'];
 				$precio	 = $_POST['precio'];
 				$talla	 = $_POST['talla'];
+                                $existencia = $_POST['existencia'];
 				$imgProducto = $_POST['foto_actual'];
 				$imgRemove = $_POST['foto_remove'];
 				$usuario_id = $_SESSION['idUser'];
@@ -43,6 +44,7 @@ if($_SESSION['rol'] != 1){
 														     categoria = $categoria,
 														     precio = $precio,
 														     talla = '$talla',
+                                                                                                                     existencia = '$existencia',
 														     foto = '$imgProducto'
 														     WHERE codproducto = $codproducto");
 														
@@ -69,7 +71,7 @@ if($_SESSION['rol'] != 1){
 		if(!is_numeric($id_producto)){
 			header("location: lista_producto.php");
 		}
-		$query_producto = mysqli_query($conection, "SELECT p.codproducto, p.producto, p.precio, p.talla, p.foto, 
+		$query_producto = mysqli_query($conection, "SELECT p.codproducto, p.producto, p.precio, p.talla, p.existencia, p.foto, 
 													c.id_categoria, c.descripcion
 													FROM producto p 
 													INNER JOIN categoria c
@@ -136,7 +138,9 @@ if($_SESSION['rol'] != 1){
 				<input type="float" name="precio" id="precio" placeholder="Precio del Producto" value="<?php echo $data_producto['precio']; ?>">
 				<label for="talla">Talla</label>
 				<input type="text" name="talla" id="talla" placeholder="Talla de la Prenda" value="<?php echo $data_producto['talla']; ?>">
-				<div class="photo">
+				<label for="existencia">Cantidad</label>
+				<input type="float" name="existencia" id="existencia" placeholder="Cantidad del Producto" value="<?php echo $data_producto['existencia']; ?>">
+                                <div class="photo">
 					<label for="foto">Foto</label>
 				        <div class="prevPhoto">
 				        <span class="delPhoto <?php echo $classRemove; ?>">X</span>
