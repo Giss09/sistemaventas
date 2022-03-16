@@ -5,7 +5,7 @@
 ?>
 <header>
 		<div class="header">
-			<p><i class="fa fa-paw" aria-hidden="true"></i> Sistema de Facturación Love & Pets</p>
+			<p><i class="fa-solid fa-infinity"></i>  Sistema de Facturación Love & Pets</p>
 			<div class="optionsBar">
 				<p>Quito, <?php echo fechaC();?></p>
 				<span>|</span>
@@ -16,3 +16,4 @@
 		</div>
 		<?php include "nav.php"; ?>
 	</header>
+	
