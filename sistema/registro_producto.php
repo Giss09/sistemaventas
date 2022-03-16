@@ -1,123 +1,105 @@
-<?php 
+<?php
 session_start();
-		include	"../conexion.php";
+if($_SESSION['rol'] != 1){
+	header("location: ./");
+}
+	include "../conexion.php";
+		if(!empty($_POST)){
+			//print_r($_FILES);
+			//exit;
+			$alert = "";
+			if(empty($_POST['categoria']) || empty($_POST['producto']) || empty($_POST['precio']) || $_POST['precio'] <=0 || empty($_POST['talla']) || empty($_POST['existencia']) ||  $_POST['existencia'] <=0 ){
+				$alert = '<p class="msg_error">Todos los campos son requeridos</p>';
+			}else{
+				$categoria = $_POST['categoria'];
+				$producto = $_POST['producto'];
+				$precio	 = $_POST['precio'];
+				$talla	 = $_POST['talla'];
+				$existencia = $_POST['existencia'];
+				$usuario_id = $_SESSION['idUser'];
+				/*FOTOGRAFIA*/
+				$foto = $_FILES['foto'];
+				$nombre_foto = $foto['name'];
+				$type = $foto['type'];
+				$url_temp = $foto['tmp_name'];
+				/*imagen si no se pone imagen para materia prima */
+				$imgProducto = 'img_producto.jpg';
+				if($nombre_foto != ''){
+					$destino = 'img/imagenesProductos/';
+					$img_nombre = 'img_'.md5(date('d-m-Y H:m:s')); /*nombre aleatorio con fecha y hora del ingreso*/
+					$imgProducto = $img_nombre.'.jpg';
+					$src = $destino.$imgProducto;
+				}
+				/*almacenar datos en la tabla materia prima*/
+				$query_insert = mysqli_query($conection,"INSERT INTO producto(categoria, producto, precio, talla, existencia, usuario_id, foto) VALUES('$categoria','$producto','$precio','$talla','$existencia','$usuario_id', '$imgProducto')");
+					if($query_insert){
+						if($nombre_foto != ''){
+							move_uploaded_file($url_temp, $src); /*almacenando la ruta temporal del archivo y lo va a mover a la nueva ruta */
+						}
+						$alert = '<p class="msg_save">El producto se creo existosamente.</p>';	
+						header("location: lista_producto.php");
+					}else{
+						$alert = '<p class="msg_error">El producto no fue creado.</p>';
+				}
+			}
+		}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<?php include "include/scripts.php"; ?>
-	<title>Lista de Productos</title>
+	<title>Registro Producto</title>
 </head>
 <body>
-	<div class="modal">
-		<div class="bodyModal">
-		</div>
-	</div>
 	<?php include "include/header.php"; ?>
 	<section id="container">
-		<h1><i class="fa fa-spinner" aria-hidden="true"></i> Lista de Productos</h1>
-			<a href="registro_producto.php" class="btn_new"><i class="fa fa-plus" aria-hidden="true"></i> Crear Producto</a>
-			<form action="buscar_producto.php" method="get" class="form_search">
-					<input type="text" name="busqueda" id="busqueda" placeholder="Buscar">
-					<button type="submit" class="btn_search"><i class="fa fa-search" aria-hidden="true"></i></button>
-			</form>
-				<table>
-					<tr>
-						<th>ID</th>
-						<th>Categoria</th>
-						<th>Descripción</th>
-						<th>Precio</th>
-						<th>Talla</th>
-						<th>Existencia</th>
-						<th>Foto</th>
-						<th>Acciones</th>
-					</tr>
-						<?php 
-						//paginador
-							$sql_register = mysqli_query($conection, "SELECT COUNT(*) AS total_registro FROM producto WHERE estatus = 1");
-							$result_register = mysqli_fetch_array($sql_register);
-							$total_registro = $result_register['total_registro'];
-							$por_pagina = 3;
-							if(empty($_GET['pagina'])){
-								$pagina = 1;
-							}else{
-								$pagina = $_GET['pagina'];
+		<div class="form_register">   
+			<h1><i class="fa-solid fa-dog"></i> Registro Producto</h1>
+			<hr>
+			<div class="alert"><?php echo isset($alert) ? $alert : ''; ?></div>
+			<form action="" method="POST" enctype="multipart/form-data"> <!-- indicamos que nuestro formulario va a tener la capacidad de  adjuntar archivos en este caso imagenes de la materia prima-->
+				<?php
+					$query_categoria = mysqli_query($conection, "SELECT id_categoria, descripcion FROM categoria WHERE estatus = 1 ORDER BY descripcion ASC");
+					$result_categoria = mysqli_num_rows($query_categoria);
+					mysqli_close($conection);
+				?>
+				<label for="categoria">Categoria</label>
+				<select name="categoria" id="categoria">
+					<?php
+						if($result_categoria > 0){
+							while($categoria = mysqli_fetch_array($query_categoria)){
+					?>
+						<option value="<?php echo $categoria['id_categoria']; ?>"><?php echo $categoria['descripcion']; ?></option>
+					<?php			
 							}
-								$desde = ($pagina - 1) * $por_pagina;
-								$total_paginas = ceil($total_registro / $por_pagina); //CEIL SIRVE PARA REDONDEAR
-									$query = mysqli_query($conection, "SELECT p.codproducto, p.producto, p.precio, 
-										p.talla, p.existencia, c.descripcion, p.foto
-										FROM producto p 
-										INNER JOIN categoria c 
-										ON p.categoria = c.id_categoria
-										WHERE p.estatus = 1 ORDER BY p.codproducto ASC LIMIT $desde, $por_pagina");
+						}
+					?>
+				</select>
 
-										mysqli_close($conection);
-
-											$result = mysqli_num_rows($query);
-												if($result	> 0){
-													while (	$data = mysqli_fetch_array($query)) {
-														if($data['foto'] != 'img_producto.jpg'){
-															$foto = 'img/imagenesProductos/' .$data['foto'];
-														}else{
-															$foto = 'img/' .$data ['foto'];
-														}														
-								?>
-								<tr class="row<?php echo $data["codproducto"]; ?>">
-									<td><?php echo $data["codproducto"]; ?></td>
-									<td><?php echo $data["descripcion"]; ?></td>
-									<td><?php echo $data["producto"]; ?></td>
-									<td><?php echo $data["precio"]; ?></td>
-									<td><?php echo $data["talla"]; ?></td>
-									<td class="celExistencia"><?php echo $data["existencia"]; ?></td>
-									<td class="img_producto"><img src="<?php echo $foto; ?>" alt="<?php echo $data["producto"]; ?>"></td>
-																		
-									<td>
-										<?php
-											if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 2){
-											
-										?>
-										<a class = "link_edit" href="editar_producto.php?id=<?php echo $data["codproducto"]; ?>"><i class="far fa-edit"></i> Editar</a>
-										|
-										<a class = "link_delete" href="eliminar_producto.php?id=<?php echo $data["codproducto"]; ?>"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</a>
-										<?php
-											}
-										?>
-									</td>
-								</tr>		
-								<?php
-													}
-												}
-								?>	
-					</table>
-						<div class="paginador">
-							<ul>
-								<?php 
-									if($pagina != 1){
-								?>	
-								<li><a href="?pagina=<?php echo 1; ?>"><i class="fa fa-step-backward" aria-hidden="true"></i></a></li>
-								<li><a href="?pagina=<?php echo $pagina - 1; ?>"><i class="fa fa-backward" aria-hidden="true"></i></a></li>
-								<?php
-									}
-									for ($i=1; $i <= $total_paginas; $i++) { 
-										if($i == $pagina){
-											echo '<li class="pageSelected">'.$i.'</li>';
-										}else{
-											echo '<li><a href="?pagina='.$i.'">'.$i.'</a></li>';
-										}
-									}
-									if($pagina != $total_paginas){
-								?>
-								<li><a href="?pagina=<?php echo $pagina + 1; ?>"><i class="fa fa-forward" aria-hidden="true"></i></a></li>
-								<li><a href="?pagina=<?php echo $total_paginas; ?>"><i class="fa fa-step-forward" aria-hidden="true"></i></a></li>
-								<?php
-									}
-								?>
-							</ul>
-						</div>
-					</section>
-<?php include "include/footer.php"; ?>
+				<label for="producto">Descripción del Producto</label>
+				<input type="text" name="producto" id="producto" placeholder="Nombre del Producto">
+				<label for="precio">Precio</label>
+				<input type="float" name="precio" id="precio" placeholder="Precio del Producto">
+				<label for="talla">Talla</label>
+				<input type="text" name="talla" id="talla" placeholder="Talla de la Prenda">
+				<label for="existencia">Cantidad</label>
+				<input type="float" name="existencia" id="existencia" placeholder="Cantidad del Producto">
+				<div class="photo">
+					<label for="foto">Foto</label>
+				        <div class="prevPhoto">
+				        <span class="delPhoto notBlock">X</span>
+				        <label for="foto"></label>
+				        </div>
+				        <div class="upimg">
+				        <input type="file" name="foto" id="foto">
+				        </div>
+				        <div id="form_alert"></div>
+				</div>
+				<button type="submit" class="btn_save"><i class="far fa-save"></i> Guardar Producto</button>
+			</form>
+		</div>
+	</section>
+	<?php include "include/footer.php"; ?>
 </body>
 </html>
-
